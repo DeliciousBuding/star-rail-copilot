@@ -46,6 +46,8 @@ Emulator:
   ControlMethod:
     value: MaaTouch
     option: [ minitouch, MaaTouch, WebGateway ]
+  GatewayUrl:
+    value: http://127.0.0.1:8090
   CloudGameURL:
     value: https://sr.mihoyo.com/cloud/
   CloudPriorQueue: false

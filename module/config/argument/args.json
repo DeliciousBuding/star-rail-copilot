@@ -51,7 +51,8 @@
           "DroidCast_raw",
           "scrcpy",
           "nemu_ipc",
-          "ldopengl"
+          "ldopengl",
+          "WebGateway"
         ]
       },
       "ControlMethod": {
@@ -59,7 +60,8 @@
         "value": "MaaTouch",
         "option": [
           "minitouch",
-          "MaaTouch"
+          "MaaTouch",
+          "WebGateway"
         ],
         "display": "hide"
       },

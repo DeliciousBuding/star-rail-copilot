@@ -22,7 +22,7 @@ class GeneratedConfig:
     Emulator_GameLanguage = 'auto'  # auto, cn, en
     Emulator_ScreenshotMethod = 'auto'  # auto, ADB, ADB_nc, uiautomator2, aScreenCap, aScreenCap_nc, DroidCast, DroidCast_raw, scrcpy, nemu_ipc, ldopengl, WebGateway
     Emulator_ControlMethod = 'MaaTouch'  # minitouch, MaaTouch, WebGateway
-    Emulator_GatewayUrl = 'http://127.0.0.1:8090'
+    Emulator_GatewayUrl = 'http://webdeck:8090'
     Emulator_CloudPriorQueue = False
     Emulator_AdbRestart = False
 

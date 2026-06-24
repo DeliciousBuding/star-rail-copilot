@@ -257,3 +257,4 @@ adb_port.ini
 *.zip
 .vscode/*
 tmp/
+cloud_auth.json

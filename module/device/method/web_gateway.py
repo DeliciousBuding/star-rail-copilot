@@ -158,11 +158,58 @@ class WebGateway:
     # App control
     # ------------------------------------------------------------------
 
+    def dump_hierarchy(self):
+        """Return empty hierarchy — web device has no Android view tree."""
+        from lxml import etree
+        return etree.fromstring('<hierarchy/>')
+
+    def _gw_eval(self, js: str) -> str:
+        """Execute JavaScript on the page and return the result."""
+        url = f"{self._gateway_url}/api/v1/evaluate"
+        try:
+            r = self._gateway_session.post(url, json={'js': js}, timeout=10)
+            r.raise_for_status()
+            return r.text
+        except Exception as e:
+            logger.error(f"Gateway eval failed: {e}")
+            raise GameNotRunningError(f"Gateway eval failed: {e}") from e
+
     def app_start(self):
-        """Navigate to cloud game URL (configured in Emulator_CloudGameURL)."""
+        """Navigate to cloud game URL and enter the game.
+
+        Gateway handles pure device navigation (URL load).
+        SRC handles game-flow logic: clicking 「进入游戏」 on the cloud
+        portal — the web equivalent of launching the app from the home screen.
+
+        Uses JS eval to click the button directly — the miHoYo cloud portal
+        uses Vue event delegation that CDP mouse events don't always trigger.
+        """
+        import time
         url = getattr(self.config, 'Emulator_CloudGameURL',
                       'https://sr.mihoyo.com/cloud/')
         self._gw_post('/api/v1/app/start', {'url': url})
+
+        # Wait for cloud portal SPA to finish loading.
+        time.sleep(6)
+
+        # Click 「进入游戏」via JavaScript (bypasses CDP event delegation issues).
+        js_click = (
+            '(function(){'
+            'var el=document.querySelector(".wel-card__content--start");'
+            'if(!el)return"not found";'
+            'el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true}));'
+            'setTimeout(function(){'
+            'el.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,cancelable:true}));'
+            'el.click();'
+            '},80);'
+            'return"clicked"'
+            '})()'
+        )
+        try:
+            result = self._gw_eval(js_click)
+            logger.info(f"WebGateway: game entry click → {result}")
+        except Exception as e:
+            logger.warning(f"WebGateway: game entry click failed: {e}")
 
     def app_stop(self):
         """Stop game session."""

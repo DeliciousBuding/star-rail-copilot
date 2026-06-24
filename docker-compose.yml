@@ -1,5 +1,5 @@
 # StarRailCopilot-Web — Full Stack Docker Compose
-# Chrome + webdeck (Go Gateway) + SRC (Python scheduler)
+# Webdeck (Go Gateway with built-in Chromium) + SRC (Python scheduler)
 #
 # Quick start:
 #   1. Place cloud_auth.json in this directory
@@ -7,22 +7,9 @@
 #   3. Open http://localhost:8090 for WebUI
 
 services:
-  chrome:
-    image: chromedp/headless-shell:latest
-    container_name: src-chrome
-    ports:
-      - "9222:9222"
-    shm_size: "2gb"
-    restart: unless-stopped
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-
   webdeck:
     build:
-      context: https://github.com/DeliciousBuding/webdeck.git#master
+      context: ../webdeck
       dockerfile: Dockerfile
     container_name: src-webdeck
     ports:
@@ -30,13 +17,10 @@ services:
     volumes:
       - ./cloud_auth.json:/app/cloud_auth.json
     command:
-      - "--remote=ws://chrome:9222"
       - "--auth=cloud_auth.json"
       - "--port=8090"
       - "--fps=30"
       - "--jpeg-quality=75"
-    depends_on:
-      - chrome
     restart: unless-stopped
     logging:
       driver: json-file
@@ -49,12 +33,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: src-scheduler
+    ports:
+      - "22367:22367"
     volumes:
-      - ./config:/app/config
       - ./assets:/app/assets
       - ./log:/app/log
-    environment:
-      SRC_GATEWAY_URL: "http://webdeck:8090"
     depends_on:
       - webdeck
     restart: unless-stopped

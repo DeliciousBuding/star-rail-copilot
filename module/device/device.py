@@ -13,6 +13,7 @@ _ = get_distribution
 from module.base.timer import Timer
 from module.device.app_control import AppControl
 from module.device.control import Control
+from module.device.method.web_gateway import WebGateway as WebGatewayMixin
 from module.device.screenshot import Screenshot
 from module.exception import (
     EmulatorNotRunningError,
@@ -92,6 +93,16 @@ class Device(Screenshot, Control, AppControl):
         # Auto-fill emulator info
         if IS_WINDOWS and self.config.EmulatorInfo_Emulator == 'auto':
             _ = self.emulator_instance
+
+        # Auto-configure WebGateway when serial indicates browser device
+        if self.serial == 'web_gateway':
+            self.config.Emulator_ScreenshotMethod = 'WebGateway'
+            self.config.Emulator_ControlMethod = 'WebGateway'
+            # Ensure Gateway has a page loaded before screenshots are taken.
+            # Navigation-only (no click) — the Restart task handles game entry.
+            url = getattr(self.config, 'Emulator_CloudGameURL',
+                          'https://sr.mihoyo.com/cloud/')
+            self._gw_post('/api/v1/app/start', {'url': url})
 
         self.screenshot_interval_set()
         self.method_check()
@@ -190,6 +201,9 @@ class Device(Screenshot, Control, AppControl):
 
     def dump_hierarchy(self) -> etree._Element:
         self.stuck_record_check()
+        if self.is_web_gateway:
+            self.hierarchy = etree.fromstring('<hierarchy/>')
+            return self.hierarchy
         return super().dump_hierarchy()
 
     def release_during_wait(self):
@@ -204,6 +218,10 @@ class Device(Screenshot, Control, AppControl):
         """
         Callbacks when orientation changed.
         """
+        if self.is_web_gateway:
+            # Web device: browser always in landscape (1280×720 viewport).
+            # Return 0 ('Normal') — no ADB dumpsys needed.
+            return 0
         o = super().get_orientation()
 
         self.on_orientation_change_maatouch()
@@ -306,11 +324,22 @@ class Device(Screenshot, Control, AppControl):
         self.stuck_record_check = empty_function
 
     def app_start(self):
-        super().app_start()
+        if self.is_web_gateway:
+            WebGatewayMixin.app_start(self)
+        else:
+            super().app_start()
         self.stuck_record_clear()
         self.click_record_clear()
 
     def app_stop(self):
-        super().app_stop()
+        if self.is_web_gateway:
+            WebGatewayMixin.app_stop(self)
+        else:
+            super().app_stop()
         self.stuck_record_clear()
         self.click_record_clear()
+
+    def app_is_running(self) -> bool:
+        if self.is_web_gateway:
+            return WebGatewayMixin.app_is_running(self)
+        return super().app_is_running()

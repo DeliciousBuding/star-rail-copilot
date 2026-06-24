@@ -12,9 +12,12 @@ FROM python:3.10-slim-bookworm
 
 WORKDIR /app
 
-# System deps for OpenCV / PaddleOCR
+# System deps for OpenCV / PaddleOCR / PyAV
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 \
+    pkg-config libavformat-dev libavcodec-dev libavdevice-dev \
+    libavutil-dev libswscale-dev libswresample-dev libavfilter-dev \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
