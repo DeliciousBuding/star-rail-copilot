@@ -159,8 +159,10 @@ class WebGateway:
     # ------------------------------------------------------------------
 
     def app_start(self):
-        """Navigate to cloud game and enter gameplay."""
-        self._gw_post('/api/v1/app/start')
+        """Navigate to cloud game URL (configured in Emulator_CloudGameURL)."""
+        url = getattr(self.config, 'Emulator_CloudGameURL',
+                      'https://sr.mihoyo.com/cloud/')
+        self._gw_post('/api/v1/app/start', {'url': url})
 
     def app_stop(self):
         """Stop game session."""

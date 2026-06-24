@@ -46,6 +46,8 @@ Emulator:
   ControlMethod:
     value: MaaTouch
     option: [ minitouch, MaaTouch, WebGateway ]
+  CloudGameURL:
+    value: https://sr.mihoyo.com/cloud/
   CloudPriorQueue: false
   AdbRestart: false
 EmulatorInfo:
