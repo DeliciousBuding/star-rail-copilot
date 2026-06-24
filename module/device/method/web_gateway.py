@@ -18,7 +18,6 @@ Usage:
 """
 
 import io
-import time
 
 import numpy as np
 from PIL import Image
@@ -146,8 +145,8 @@ class WebGateway:
         """Stop game session."""
         try:
             self._gw_post('/api/v1/app/stop')
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Gateway app_stop failed: {e}")
 
     def app_is_running(self) -> bool:
         """Check if Gateway reports healthy state."""

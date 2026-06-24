@@ -256,3 +256,4 @@ adb_port.ini
 !popup.exe
 *.zip
 .vscode/*
+tmp/
