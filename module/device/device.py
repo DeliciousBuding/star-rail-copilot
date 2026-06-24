@@ -145,6 +145,16 @@ class Device(Screenshot, Control, AppControl):
             logger.warning('Use MaaTouch on ldplayer')
             self.config.Emulator_ControlMethod = 'MaaTouch'
 
+        # WebGateway: screenshot and control method must match
+        if self.config.Emulator_ScreenshotMethod == 'WebGateway' \
+                and self.config.Emulator_ControlMethod != 'WebGateway':
+            logger.warning('When using WebGateway screenshot, control method must also be WebGateway')
+            self.config.Emulator_ControlMethod = 'WebGateway'
+        if self.config.Emulator_ControlMethod == 'WebGateway' \
+                and self.config.Emulator_ScreenshotMethod != 'WebGateway':
+            logger.warning('When using WebGateway control, screenshot method must also be WebGateway')
+            self.config.Emulator_ScreenshotMethod = 'WebGateway'
+
         # Fallback to auto if nemu_ipc and ldopengl are selected on non-corresponding emulators
         if self.config.Emulator_ScreenshotMethod == 'nemu_ipc':
             if not (self.is_emulator and self.is_mumu_family):

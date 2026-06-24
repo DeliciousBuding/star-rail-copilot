@@ -17,11 +17,12 @@ from module.device.method.ldopengl import LDOpenGL
 from module.device.method.nemu_ipc import NemuIpc
 from module.device.method.scrcpy import Scrcpy
 from module.device.method.wsa import WSA
+from module.device.method.web_gateway import WebGateway
 from module.exception import RequestHumanTakeover, ScriptError
 from module.logger import logger
 
 
-class Screenshot(Adb, WSA, DroidCast, AScreenCap, Scrcpy, NemuIpc, LDOpenGL):
+class Screenshot(Adb, WSA, DroidCast, AScreenCap, Scrcpy, NemuIpc, LDOpenGL, WebGateway):
     _screen_size_checked = False
     _screen_black_checked = False
     _minicap_uninstalled = False
@@ -40,6 +41,7 @@ class Screenshot(Adb, WSA, DroidCast, AScreenCap, Scrcpy, NemuIpc, LDOpenGL):
             'DroidCast': self.screenshot_droidcast,
             'DroidCast_raw': self.screenshot_droidcast_raw,
             'scrcpy': self.screenshot_scrcpy,
+            'WebGateway': self.screenshot_web_gateway,
             'nemu_ipc': self.screenshot_nemu_ipc,
             'ldopengl': self.screenshot_ldopengl,
         }

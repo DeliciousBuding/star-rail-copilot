@@ -41,10 +41,11 @@ Emulator:
       scrcpy,
       nemu_ipc,
       ldopengl,
+      WebGateway,
     ]
   ControlMethod:
     value: MaaTouch
-    option: [ minitouch, MaaTouch ]
+    option: [ minitouch, MaaTouch, WebGateway ]
   CloudPriorQueue: false
   AdbRestart: false
 EmulatorInfo:

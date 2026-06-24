@@ -113,6 +113,9 @@ class Connection(ConnectionAttr):
             config (AzurLaneConfig, str): Name of the user config under ./config
         """
         super().__init__(config)
+        if self.is_web_gateway:
+            # WebGateway mode: skip ADB device detection and connection
+            return
         if not self.is_over_http:
             self.detect_device()
 
@@ -877,6 +880,8 @@ class Connection(ConnectionAttr):
         del_cached_property(self, '_minitouch_builder')
         del_cached_property(self, '_maatouch_builder')
         del_cached_property(self, 'reverse_server')
+        if hasattr(self, 'web_gateway_release'):
+            self.web_gateway_release()
 
     def adb_disconnect(self):
         msg = self.adb_client.disconnect(self.serial)

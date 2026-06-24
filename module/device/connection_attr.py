@@ -33,6 +33,13 @@ class ConnectionAttr:
         else:
             self.config = config
 
+        # Parse custom serial early — web_gateway skips ADB init
+        self.serial = str(self.config.Emulator_Serial)
+
+        if self.is_web_gateway:
+            logger.attr('DeviceMode', 'WebGateway')
+            return
+
         # Init adb client
         logger.attr('AdbBinary', self.adb_binary)
         # Monkey patch to custom adb
@@ -44,8 +51,6 @@ class ConnectionAttr:
         # Cache adb_client
         _ = self.adb_client
 
-        # Parse custom serial
-        self.serial = str(self.config.Emulator_Serial)
         self.serial_check()
         self.config.DEVICE_OVER_HTTP = self.is_over_http
 
@@ -193,6 +198,10 @@ class ConnectionAttr:
     @cached_property
     def is_over_http(self):
         return bool(re.match(r"^https?://", self.serial))
+
+    @cached_property
+    def is_web_gateway(self):
+        return self.serial == 'web_gateway'
 
     @cached_property
     def is_chinac_phone_cloud(self):

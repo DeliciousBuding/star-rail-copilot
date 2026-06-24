@@ -20,8 +20,9 @@ class GeneratedConfig:
     Emulator_GameClient = 'android'  # android, cloud_android
     Emulator_PackageName = 'auto'  # auto, CN-Official, CN-Bilibili, VN-Official, OVERSEA-America, OVERSEA-Asia, OVERSEA-Europe, OVERSEA-TWHKMO
     Emulator_GameLanguage = 'auto'  # auto, cn, en
-    Emulator_ScreenshotMethod = 'auto'  # auto, ADB, ADB_nc, uiautomator2, aScreenCap, aScreenCap_nc, DroidCast, DroidCast_raw, scrcpy, nemu_ipc, ldopengl
-    Emulator_ControlMethod = 'MaaTouch'  # minitouch, MaaTouch
+    Emulator_ScreenshotMethod = 'auto'  # auto, ADB, ADB_nc, uiautomator2, aScreenCap, aScreenCap_nc, DroidCast, DroidCast_raw, scrcpy, nemu_ipc, ldopengl, WebGateway
+    Emulator_ControlMethod = 'MaaTouch'  # minitouch, MaaTouch, WebGateway
+    Emulator_GatewayUrl = 'http://127.0.0.1:8090'
     Emulator_CloudPriorQueue = False
     Emulator_AdbRestart = False
 
