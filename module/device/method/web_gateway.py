@@ -1,7 +1,7 @@
 """
 Web Gateway device method for SRC/ALAS framework.
 
-HTTP client adapter to src-web-gateway (Go CDP Gateway). Replaces ADB with
+HTTP client adapter to src-web-gateway (Go Gateway). Replaces ADB with
 browser-based cloud gaming via Gateway's v1 stable API.
 
 SRC-native pattern:
@@ -76,14 +76,11 @@ class WebGateway:
             return r
         except Exception as e:
             logger.error(f"Gateway POST {path}: {e}")
-            raise
+            raise GameNotRunningError(f"Gateway unreachable: {e}") from e
 
     def _gw_health(self):
         try:
-            r = self._gateway_session.get(
-                f"{self._gateway_url}/api/v1/health", timeout=5
-            )
-            return r.json()
+            return self._gw_get('/api/v1/health').json()
         except Exception:
             return {"ok": False, "state": "UNREACHABLE"}
 
