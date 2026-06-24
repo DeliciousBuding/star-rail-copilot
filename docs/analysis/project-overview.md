@@ -16,7 +16,7 @@ SRC Framework (Python, upstream: LmeSzinc/StarRailCopilot)
 ```
 
 - **SRC**: Upstream fork at [DeliciousBuding/star-rail-copilot](https://github.com/DeliciousBuding/star-rail-copilot), branch `feat/web-gateway-device`
-- **Gateway**: [DeliciousBuding/src-web-gateway](https://github.com/DeliciousBuding/src-web-gateway) — Go CDP Gateway
+- **Gateway**: [DeliciousBuding/webdeck](https://github.com/DeliciousBuding/webdeck) — Go CDP Gateway
 - **Protocol**: HTTP — SRC adapter calls Gateway's `/api/v1/*` endpoints
 
 ## Technology Stack
@@ -66,9 +66,9 @@ pip install -r requirements.txt
 python src.py
 
 # Gateway (separate repo)
-cd src-web-gateway
-go build -o src-web-gateway ./cmd/gateway/
-./src-web-gateway --auth cloud_auth.json
+cd webdeck
+go build -o webdeck ./cmd/gateway/
+./webdeck --auth cloud_auth.json
 ```
 
 ## Design Principles

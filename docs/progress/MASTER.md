@@ -48,7 +48,7 @@ Emulator_GatewayUrl: 'http://127.0.0.1:8090'  # default
 ```
 
 ## Related Repository
-- [src-web-gateway](https://github.com/DeliciousBuding/src-web-gateway) — Go CDP Gateway (separate repo)
+- [webdeck](https://github.com/DeliciousBuding/webdeck) — Go CDP Gateway (separate repo)
 
 ## Next Steps
 1. End-to-end integration test: SRC → Gateway → Chrome → OCR → Click

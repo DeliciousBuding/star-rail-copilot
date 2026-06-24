@@ -1,7 +1,7 @@
 """
 Web Gateway device method for SRC/ALAS framework.
 
-HTTP client adapter to src-web-gateway (Go Gateway). Replaces ADB with
+HTTP client adapter to webdeck (Go Gateway). Replaces ADB with
 browser-based cloud gaming via Gateway's v1 stable API.
 
 SRC-native pattern:
@@ -29,7 +29,7 @@ from module.logger import logger
 
 
 class WebGateway:
-    """SRC Device method — HTTP client to src-web-gateway. Same interface as adb.py.
+    """SRC Device method — HTTP client to webdeck. Same interface as adb.py.
 
     This is a MIXIN class. It must NOT have __init__.
     It relies on self.config being set by ConnectionAttr before any method is called.
