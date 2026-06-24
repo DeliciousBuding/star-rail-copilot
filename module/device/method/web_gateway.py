@@ -48,7 +48,28 @@ class WebGateway:
         import requests
         s = requests.Session()
         s.headers['User-Agent'] = 'SRC-WebGateway/1.0'
+        self._verify_coordinates(s)
         return s
+
+    def _verify_coordinates(self, session):
+        """Verify Gateway reports 1280×720 before any screenshots are taken."""
+        try:
+            r = session.get(
+                f"{self._gateway_url}/api/v1/device/info", timeout=10
+            )
+            r.raise_for_status()
+            info = r.json()
+            w, h = info.get('width'), info.get('height')
+            if w != 1280 or h != 720:
+                raise RuntimeError(
+                    f"Gateway resolution mismatch: expected 1280×720, got {w}×{h}"
+                )
+            logger.info(f"Gateway coordinate contract verified: {w}×{h}")
+        except Exception as e:
+            logger.error(f"Coordinate verification failed: {e}")
+            raise GameNotRunningError(
+                f"Gateway coordinate contract failed: {e}"
+            ) from e
 
     def _gateway_release(self):
         if '_gateway_session' in self.__dict__:
